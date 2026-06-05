@@ -30,7 +30,7 @@ textarea.addEventListener("input", (event) => {
         const wordColor = randomHSL();
         const xPos = Math.random() * 0.95 * window.innerWidth;
         const yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight;
-        const state = Math.random() < 0.5 ? 'Fade' : 'Burst';
+        const state = Math.random() < 0.5 ? "Fade" : "Burst";
         // Word Bubble Object
         const wordBubble = {
             word: lastWord,
@@ -40,7 +40,7 @@ textarea.addEventListener("input", (event) => {
             xPos: xPos,
             yPos: yPos,
             opacity: 1,
-            state: state
+            state: state,
         };
         // Store all words in an array for animation
         allWords.push(wordBubble);
@@ -77,14 +77,25 @@ function animate(timestamp) {
     }
     const elapsed = timestamp - start;
     for (let i = 0; i < allWords.length; i++) {
-        allWords[i].opacity -= 0.001;
         allWords[i].yPos -= 0.5; // going up - evaporate
-        allWords[i].xPos = allWords[i].xPosOrigin + Math.sin(elapsed/8000*i) * 20; // Add horizontal oscillation
-        allWords[i].size -= 0.05;
-        if(allWords[i].yPos < -50 || allWords[i].size < 0 || allWords[i].opacity <= 0) {
-          allWords[i].yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight; // Reset position to bottom half
-          allWords[i].size = Math.random() * 20 + 50; // Reset size
-          allWords[i].opacity = 1;
+        allWords[i].xPos =
+            allWords[i].xPosOrigin + Math.sin((elapsed / 8000) * i) * 20; // Add horizontal oscillation
+        allWords[i].opacity -= 0.001;
+
+        if (allWords[i].state == "Fade") {
+            allWords[i].size -= 0.05;
+        }
+        if (allWords[i].state == "Burst") {
+            allWords[i].size += 0.05;
+        }
+        if (
+            allWords[i].yPos < -50 ||
+            allWords[i].size < 0 ||
+            allWords[i].opacity <= 0
+        ) {
+            allWords[i].yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight; // Reset position to bottom half
+            allWords[i].size = Math.random() * 20 + 50; // Reset size
+            allWords[i].opacity = 1;
         }
         allWords[i].bubble.style.fontSize = `${allWords[i].size}px`;
         allWords[i].bubble.style.top = `${allWords[i].yPos}px`;
