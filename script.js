@@ -30,6 +30,7 @@ textarea.addEventListener("input", (event) => {
         const wordColor = randomHSL();
         const xPos = Math.random() * 0.95 * window.innerWidth;
         const yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight;
+        const state = Math.random() < 0.5 ? 'Fade' : 'Burst';
         // Word Bubble Object
         const wordBubble = {
             word: lastWord,
@@ -39,6 +40,7 @@ textarea.addEventListener("input", (event) => {
             xPos: xPos,
             yPos: yPos,
             opacity: 1,
+            state: state
         };
         // Store all words in an array for animation
         allWords.push(wordBubble);
