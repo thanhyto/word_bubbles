@@ -35,9 +35,10 @@ textarea.addEventListener("input", (event) => {
             word: lastWord,
             size: wordSize,
             color: wordColor,
+            xPosOrigin: xPos,
             xPos: xPos,
             yPos: yPos,
-            opacity: Math.random() * 0.5 + 0.5,
+            opacity: 100,
         };
         // Store all words in an array for animation
         allWords.push(wordBubble);
@@ -61,6 +62,7 @@ function launchWord(wordBubble) {
     bubble.style.color = wordBubble.color;
     bubble.style.left = `${wordBubble.xPos}px`;
     bubble.style.top = `${wordBubble.yPos}px`;
+    bubble.style.opacity = `${wordBubble.opacity}%`;
     wordBubble.bubble = bubble; // Store the bubble element in the wordBubble object
     console.log(bubble);
     // Update allWords with the new bubble
@@ -73,13 +75,18 @@ function animate(timestamp) {
     }
     const elapsed = timestamp - start;
     for (let i = 0; i < allWords.length; i++) {
-        allWords[i].yPos -= 0.5;
+        allWords[i].opacity -= 1;
+        allWords[i].yPos -= 0.5; // going up - evaporate
+        allWords[i].xPos = allWords[i].xPosOrigin + Math.sin(elapsed/8000*i) * 20; // Add horizontal oscillation
         allWords[i].size -= 0.05;
         if(allWords[i].yPos < -50 || allWords[i].size < 0) {
-          allWords[i].yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight; // Bring it back to the bottom
+          allWords[i].yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight; // Reset position to bottom half
+          allWords[i].size = Math.random() * 20 + 50; // Reset size
         }
         allWords[i].bubble.style.fontSize = `${allWords[i].size}px`;
         allWords[i].bubble.style.top = `${allWords[i].yPos}px`;
+        allWords[i].bubble.style.left = `${allWords[i].xPos}px`;
+        allWords[i].bubble.style.opacity = `${allWords[i].opacity}px`
     }
     requestAnimationFrame(animate);
 }
