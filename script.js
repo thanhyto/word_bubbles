@@ -15,8 +15,8 @@ const randomState = () => {
 // Create Dots
 const createDots = (x, y, color) => {
     const div = document.createElement("div");
-    const randomAngle = Math.random() * Math.PI * 2;
-    const randomSpeed = 3 * Math.random();
+    const randomAngle = Math.random() * Math.PI * 2; // Random angle in radians
+    const randomSpeed = Math.random() / 4;
     const vx = randomSpeed * Math.cos(randomAngle);
     const vy = randomSpeed * Math.sin(randomAngle);
     const dot = {
@@ -25,7 +25,7 @@ const createDots = (x, y, color) => {
         vx: vx,
         color: color,
         vy: vy,
-        size: 20,
+        size: Math.random() * 5 + 20,
         opacity: 1,
     };
     div.style.height = `${dot.size}px`;
@@ -43,7 +43,7 @@ const createDots = (x, y, color) => {
 
 // Burst
 const burst = (xPos, yPos, color) => {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 10; i++) {
         createDots(xPos, yPos, color);
     }
 };
@@ -63,7 +63,7 @@ textarea.addEventListener("input", (event) => {
         const xPos = Math.random() * 0.95 * window.innerWidth;
         const yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight;
         const state = randomState();
-        const speed = Math.random() * 40;
+        const speed = Math.random() * 30;
         // Word Bubble Object
         const wordBubble = {
             word: lastWord,
@@ -72,9 +72,11 @@ textarea.addEventListener("input", (event) => {
             xPosOrigin: xPos,
             xPos: xPos,
             yPos: yPos,
-            opacity: 1,
+            opacity: 0.8,
             state: state,
             speed: speed,
+            hasBurst: false
+
         };
         // Store all words in an array for animation
         allWords.push(wordBubble);
@@ -124,8 +126,10 @@ function animate(timestamp) {
         // If burst, increase size and burst
         if (allWords[i].state == "Burst") {
             allWords[i].size += 0.25;
-            if (allWords[i].size >= 150) {
+            if (allWords[i].size >= 150 && !allWords[i].hasBurst) {
+                allWords[i].hasBurst = true;
                 burst(allWords[i].xPos, allWords[i].yPos, allWords[i].color);
+                allWords[i].opacity = 0;
             }
         }
         if (
@@ -135,11 +139,13 @@ function animate(timestamp) {
             allWords[i].opacity <= 0
         ) {
             allWords[i].yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight; // Reset Y position to bottom half
-            allWords[i].xPosOrigin = Math.random() * 0.95 * window.innerWidth; // Reset X position
+            allWords[i].xPosOrigin = Math.random() * 0.95 * window.innerWidth; // Reset X origin position
+            allWords[i].xPos = allWords[i].xPosOrigin; // Reset X Position to xPosOrigin
             allWords[i].size = Math.random() * 20 + 50; // Reset size
             allWords[i].opacity = 1;
             allWords[i].state = randomState();
             allWords[i].bubble.style.color = randomHSL();
+            allWords[i].hasBurst = false;
         }
         allWords[i].bubble.style.fontSize = `${allWords[i].size}px`;
         allWords[i].bubble.style.top = `${allWords[i].yPos}px`;
@@ -149,17 +155,18 @@ function animate(timestamp) {
     for (let j = 0; j < dots.length; j++) {
         if(dots[j].x < 0 || dots[j].x > window.innerWidth ||
           dots[j].y < 0 || dots[j].y > window.innerHeight ||
-          dots[j].opacity <= 0.3
+          dots[j].opacity <= 0.2
         ) {
           dots[j].div.remove();
         }
         dots[j].x += dots[j].vx;
         dots[j].y += dots[j].vy;
-        dots[j].size *= 0.7;
-        dots[j].opacity -= 0.001;
+        dots[j].size -= 0.1;
+        dots[j].opacity -= 0.005;
         dots[j].div.style.left = `${dots[j].x}px`;
         dots[j].div.style.top = `${dots[j].y}px`;
-        dots[j].div.style.size = `${dots[j].size}px`;
+        dots[j].div.style.width = `${dots[j].size}px`;
+        dots[j].div.style.height = `${dots[j].size}px`;
         dots[j].div.style.opacity = `${dots[j].opacity}`;
     }
     requestAnimationFrame(animate);
