@@ -111,6 +111,7 @@ function launchWord(wordBubble) {
     document.getElementById("stage").appendChild(bubble);
 }
 // Animation function
+// TODO: The first instance of the word bubble is moving faster than the rest, need to fix that
 function animate(timestamp) {
     if (start === undefined) {
         start = timestamp;
