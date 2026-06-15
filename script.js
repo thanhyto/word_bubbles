@@ -25,7 +25,7 @@ const createDots = (x, y, color) => {
         vx: vx,
         color: color,
         vy: vy,
-        size: Math.random() * 5 + 20,
+        size: Math.random() * 5 + 40,
         opacity: 1,
     };
     div.style.height = `${dot.size}px`;
@@ -63,7 +63,10 @@ textarea.addEventListener("input", (event) => {
         const xPos = Math.random() * 0.95 * window.innerWidth;
         const yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight;
         const state = randomState();
-        const speed = Math.random() * 30;
+        const swaySpeed = Math.random() * 3 + 1;
+        const swayAmount = Math.random() * 40 + 20;
+        const swayOffset = Math.random() * 1000;
+        const opacity = Math.random() * 0.4 + 0.3;
         // Word Bubble Object
         const wordBubble = {
             word: lastWord,
@@ -72,11 +75,12 @@ textarea.addEventListener("input", (event) => {
             xPosOrigin: xPos,
             xPos: xPos,
             yPos: yPos,
-            opacity: 0.8,
+            opacity: opacity,
             state: state,
-            speed: speed,
-            hasBurst: false
-
+            hasBurst: false,
+            swaySpeed: swaySpeed,
+            swayAmount: swayAmount,
+            swayOffset: swayOffset,
         };
         // Store all words in an array for animation
         allWords.push(wordBubble);
@@ -117,7 +121,7 @@ function animate(timestamp) {
         allWords[i].yPos -= 0.5; // going up - evaporate
         allWords[i].xPos =
             allWords[i].xPosOrigin +
-            Math.sin((elapsed / 8000) * i) * allWords[i].speed; // Add horizontal oscillation
+            Math.sin(elapsed / 1000 * allWords[i].swaySpeed + allWords[i].swayOffset) * allWords[i].swayAmount; // Add horizontal oscillation
         // If fade, then decrease size and opacity
         if (allWords[i].state == "Fade") {
             allWords[i].size -= 0.25;
@@ -138,14 +142,21 @@ function animate(timestamp) {
             allWords[i].size > 170 ||
             allWords[i].opacity <= 0
         ) {
+            // Reset the word bubble to the bottom half with new properties
             allWords[i].yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight; // Reset Y position to bottom half
             allWords[i].xPosOrigin = Math.random() * 0.95 * window.innerWidth; // Reset X origin position
             allWords[i].xPos = allWords[i].xPosOrigin; // Reset X Position to xPosOrigin
+            allWords[i].swaySpeed = Math.random() * 0.5 + 0.5;
+            allWords[i].swayAmount = Math.random() * 40 + 20;
+            allWords[i].swayOffset = Math.random() * 1000;
             allWords[i].size = Math.random() * 20 + 50; // Reset size
             allWords[i].opacity = 1;
             allWords[i].state = randomState();
-            allWords[i].bubble.style.color = randomHSL();
+            const newColor = randomHSL();
+            allWords[i].color = newColor; // Reset color
+            allWords[i].bubble.style.color = newColor; // Update bubble color
             allWords[i].hasBurst = false;
+            
         }
         allWords[i].bubble.style.fontSize = `${allWords[i].size}px`;
         allWords[i].bubble.style.top = `${allWords[i].yPos}px`;
