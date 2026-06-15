@@ -124,12 +124,12 @@ function animate(timestamp) {
             Math.sin(elapsed / 1000 * allWords[i].swaySpeed + allWords[i].swayOffset) * allWords[i].swayAmount; // Add horizontal oscillation
         // If fade, then decrease size and opacity
         if (allWords[i].state == "Fade") {
-            allWords[i].size -= 0.25;
+            allWords[i].size -= 0.1;
             allWords[i].opacity -= 0.001;
         }
         // If burst, increase size and burst
         if (allWords[i].state == "Burst") {
-            allWords[i].size += 0.25;
+            allWords[i].size += 0.1;
             if (allWords[i].size >= 150 && !allWords[i].hasBurst) {
                 allWords[i].hasBurst = true;
                 burst(allWords[i].xPos, allWords[i].yPos, allWords[i].color);
