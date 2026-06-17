@@ -18,6 +18,14 @@ body {
   justify-content: center;
   align-items: center;
 }
+#timestamp {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  font-size: 14px;
+  z-index: 9999;
+  pointer-events:none;
+}
 #words-container{
   position: relative;
   width: 80%;

@@ -1,7 +1,16 @@
 let allWords = [];
 let lastLaunchedWord = "";
 let dots = [];
-
+const timeStamp = document.getElementById('timestamp');
+const updateTimeStamp = () => {
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'short',
+    timeStyle: 'medium'
+  });
+  timeStamp.textContent = formatter.format(now);
+}
+updateTimeStamp()
 const textarea = document.getElementById("word-input");
 // Randomize Color
 const randomHSL = () => {
@@ -16,7 +25,7 @@ const randomState = () => {
 const createDots = (x, y, color) => {
     const div = document.createElement("div");
     const randomAngle = Math.random() * Math.PI * 2; // Random angle in radians
-    const randomSpeed = Math.random() / 4 + 0.3; // Random speed between 0.3 and 0.55
+    const randomSpeed = Math.random() / 4 + 0.4; // Random speed between 0.4 and 0.65
     const vx = randomSpeed * Math.cos(randomAngle);
     const vy = randomSpeed * Math.sin(randomAngle);
     const dot = {
@@ -26,7 +35,7 @@ const createDots = (x, y, color) => {
         vy: vy,
         color: color,
         size: Math.random() * 5 + 70,
-        opacity: 1,
+        opacity: 0.8,
     };
     div.style.height = `${dot.size}px`;
     div.style.width = `${dot.size}px`;
@@ -105,13 +114,13 @@ function launchWord(wordBubble) {
     bubble.style.left = `${wordBubble.xPos}px`;
     bubble.style.top = `${wordBubble.yPos}px`;
     bubble.style.opacity = wordBubble.opacity;
+    bubble.style.fontFamily = "'Quicksand', sans-serif";
     wordBubble.bubble = bubble; // Store the bubble element in the wordBubble object
     console.log(bubble);
     // Update allWords with the new bubble
     document.getElementById("stage").appendChild(bubble);
 }
 // Animation function
-// TODO: The first instance of the word bubble is moving faster than the rest, need to fix that
 function animate(timestamp) {
     if (start === undefined) {
         start = timestamp;
@@ -147,7 +156,7 @@ function animate(timestamp) {
             allWords[i].yPos = (Math.random() * 0.5 + 0.4) * window.innerHeight; // Reset Y position to bottom half
             allWords[i].xPosOrigin = Math.random() * 0.95 * window.innerWidth; // Reset X origin position
             allWords[i].xPos = allWords[i].xPosOrigin; // Reset X Position to xPosOrigin
-            allWords[i].swaySpeed = Math.random() * 0.5 + 0.5;
+            allWords[i].swaySpeed = Math.random() * 3 + 1;
             allWords[i].swayAmount = Math.random() * 40 + 20;
             allWords[i].swayOffset = Math.random() * 1000;
             allWords[i].size = Math.random() * 20 + 50; // Reset size
