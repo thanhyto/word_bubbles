@@ -11,7 +11,7 @@ const updateTimeStamp = () => {
   timeStamp.textContent = formatter.format(now);
 }
 updateTimeStamp();
-setInterval(updateTimestamp, 1000); // Update every second
+setInterval(updateTimeStamp, 1000); // Update every second
 const textarea = document.getElementById("word-input");
 // Randomize Color
 const randomHSL = () => {
@@ -23,7 +23,7 @@ const randomState = () => {
     return Math.random() < 0.5 ? "Fade" : "Burst";
 };
 // Create Dots
-const createDots = (x, y, color) => {
+const createDots = (x, y, color, opacity) => {
     const div = document.createElement("div");
     const randomAngle = Math.random() * Math.PI * 2; // Random angle in radians
     const randomSpeed = Math.random() / 4 + 0.4; // Random speed between 0.4 and 0.65
@@ -36,7 +36,7 @@ const createDots = (x, y, color) => {
         vy: vy,
         color: color,
         size: Math.random() * 5 + 70,
-        opacity: 0.8,
+        opacity: opacity,
     };
     div.style.height = `${dot.size}px`;
     div.style.width = `${dot.size}px`;
@@ -52,9 +52,9 @@ const createDots = (x, y, color) => {
 };
 
 // Burst
-const burst = (xPos, yPos, color) => {
+const burst = (xPos, yPos, color, opacity) => {
     for (let i = 0; i < 5; i++) {
-        createDots(xPos, yPos, color);
+        createDots(xPos, yPos, color, opacity);
     }
 };
 
@@ -143,7 +143,7 @@ function animate(timestamp) {
             allWords[i].size += 0.1;
             if (allWords[i].size >= 150 && !allWords[i].hasBurst) {
                 allWords[i].hasBurst = true;
-                burst(allWords[i].xPos, allWords[i].yPos, allWords[i].color);
+                burst(allWords[i].xPos, allWords[i].yPos, allWords[i].color, allWords[i].opacity);
                 allWords[i].opacity = 0;
             }
         }
@@ -161,7 +161,7 @@ function animate(timestamp) {
             allWords[i].swayAmount = Math.random() * 40 + 20;
             allWords[i].swayOffset = Math.random() * 1000;
             allWords[i].size = Math.random() * 20 + 50; // Reset size
-            allWords[i].opacity = 1;
+            allWords[i].opacity = Math.random() * 0.4 + 0.3; // Reset opacity
             allWords[i].state = randomState();
             const newColor = randomHSL();
             allWords[i].color = newColor; // Reset color
