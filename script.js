@@ -64,10 +64,6 @@ textarea.addEventListener("input", (event) => {
     if (event.target.value.endsWith(" ")) {
         const words = event.target.value.trim().split(/\s+/);
         const lastWord = words[words.length - 1];
-        // Prevent launching the same word multiple times if the user keeps pressing space
-        if (lastWord === lastLaunchedWord && lastLaunchedWord == "") {
-            return;
-        }
         const wordSize = Math.random() * 20 + 70;
         const wordColor = randomHSL();
         const xPos = Math.random() * 0.95 * window.innerWidth;
@@ -94,9 +90,6 @@ textarea.addEventListener("input", (event) => {
         };
         // Store all words in an array for animation
         allWords.push(wordBubble);
-        // console.log("all words:", words);
-        console.log("global all words:", allWords);
-        console.log("word released:", lastWord);
         launchWord(wordBubble);
         // Update last launched word
         lastLaunchedWord = lastWord;
@@ -115,7 +108,6 @@ function launchWord(wordBubble) {
     bubble.style.opacity = wordBubble.opacity;
     bubble.style.fontFamily = "'Quicksand', sans-serif";
     wordBubble.bubble = bubble; // Store the bubble element in the wordBubble object
-    console.log(bubble);
     // Update allWords with the new bubble
     document.getElementById("stage").appendChild(bubble);
 }
