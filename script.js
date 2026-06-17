@@ -179,7 +179,9 @@ function animate(timestamp) {
           dots[j].y < 0 || dots[j].y > window.innerHeight ||
           dots[j].opacity <= 0
         ) {
-          dots[j].div.remove();
+          dots.splice(j, 1);
+          j--;
+          continue;
         }
         dots[j].x += dots[j].vx * 60 * deltaTime;
         dots[j].y += dots[j].vy * 60 * deltaTime;
