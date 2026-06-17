@@ -26,7 +26,7 @@ const randomState = () => {
 const createDots = (x, y, color, opacity) => {
     const div = document.createElement("div");
     const randomAngle = Math.random() * Math.PI * 2; // Random angle in radians
-    const randomSpeed = Math.random() / 4 + 0.4; // Random speed between 0.4 and 0.65
+    const randomSpeed = Math.random() / 8 + 0.4; // Random speed between 0.4 and 0.65
     const vx = randomSpeed * Math.cos(randomAngle);
     const vy = randomSpeed * Math.sin(randomAngle);
     const dot = {
@@ -102,8 +102,6 @@ textarea.addEventListener("input", (event) => {
         lastLaunchedWord = lastWord;
     }
 });
-// Animation loop
-let start; // Start time for animation
 // Bubble animation
 function launchWord(wordBubble) {
     // Appear at the bottom half of the screen
@@ -121,26 +119,36 @@ function launchWord(wordBubble) {
     // Update allWords with the new bubble
     document.getElementById("stage").appendChild(bubble);
 }
-// Animation function
+let previousTimestamp;
+let start;
+
 function animate(timestamp) {
     if (start === undefined) {
         start = timestamp;
     }
     const elapsed = timestamp - start;
+
+    //  for delta time
+    if (previousTimestamp === undefined) {
+        previousTimestamp = timestamp;
+    }
+    const deltaTime = (timestamp - previousTimestamp) / 1000; // seconds since last frame
+    previousTimestamp = timestamp;
+
     for (let i = 0; i < allWords.length; i++) {
         // Update each word
-        allWords[i].yPos -= 0.5; // going up - evaporate
+        allWords[i].yPos -= 30 * deltaTime; // going up - evaporate
         allWords[i].xPos =
             allWords[i].xPosOrigin +
             Math.sin(elapsed / 1000 * allWords[i].swaySpeed + allWords[i].swayOffset) * allWords[i].swayAmount; // Add horizontal oscillation
         // If fade, then decrease size and opacity
         if (allWords[i].state == "Fade") {
-            allWords[i].size -= 0.1;
-            allWords[i].opacity -= 0.001;
+            allWords[i].size -= 6 * deltaTime;
+            allWords[i].opacity -= 0.06 * deltaTime;
         }
         // If burst, increase size and burst
         if (allWords[i].state == "Burst") {
-            allWords[i].size += 0.1;
+            allWords[i].size += 6 * deltaTime;
             if (allWords[i].size >= 150 && !allWords[i].hasBurst) {
                 allWords[i].hasBurst = true;
                 burst(allWords[i].xPos, allWords[i].yPos, allWords[i].color, allWords[i].opacity);
@@ -177,14 +185,14 @@ function animate(timestamp) {
     for (let j = 0; j < dots.length; j++) {
         if(dots[j].x < 0 || dots[j].x > window.innerWidth ||
           dots[j].y < 0 || dots[j].y > window.innerHeight ||
-          dots[j].opacity <= 0.2
+          dots[j].opacity <= 0
         ) {
           dots[j].div.remove();
         }
-        dots[j].x += dots[j].vx;
-        dots[j].y += dots[j].vy;
-        dots[j].size -= 0.1;
-        dots[j].opacity -= 0.005;
+        dots[j].x += dots[j].vx * 60 * deltaTime;
+        dots[j].y += dots[j].vy * 60 * deltaTime;
+        dots[j].size -= 3 * deltaTime;
+        dots[j].opacity -= 0.18 * deltaTime;
         dots[j].div.style.left = `${dots[j].x}px`;
         dots[j].div.style.top = `${dots[j].y}px`;
         dots[j].div.style.width = `${dots[j].size}px`;
