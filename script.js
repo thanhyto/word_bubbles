@@ -16,16 +16,16 @@ const randomState = () => {
 const createDots = (x, y, color) => {
     const div = document.createElement("div");
     const randomAngle = Math.random() * Math.PI * 2; // Random angle in radians
-    const randomSpeed = Math.random() / 4;
+    const randomSpeed = Math.random() / 4 + 0.3; // Random speed between 0.3 and 0.55
     const vx = randomSpeed * Math.cos(randomAngle);
     const vy = randomSpeed * Math.sin(randomAngle);
     const dot = {
         x: x,
         y: y,
         vx: vx,
-        color: color,
         vy: vy,
-        size: Math.random() * 5 + 40,
+        color: color,
+        size: Math.random() * 5 + 70,
         opacity: 1,
     };
     div.style.height = `${dot.size}px`;
@@ -43,7 +43,7 @@ const createDots = (x, y, color) => {
 
 // Burst
 const burst = (xPos, yPos, color) => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
         createDots(xPos, yPos, color);
     }
 };
