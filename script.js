@@ -10,7 +10,8 @@ const updateTimeStamp = () => {
   });
   timeStamp.textContent = formatter.format(now);
 }
-updateTimeStamp()
+updateTimeStamp();
+setInterval(updateTimestamp, 1000); // Update every second
 const textarea = document.getElementById("word-input");
 // Randomize Color
 const randomHSL = () => {

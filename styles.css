@@ -8,6 +8,7 @@ body {
   height: 100vh;
   overflow: hidden;
   background-color: whitesmoke;
+  font-family: 'Georgia', 'sans-serif';
 }
 #stage{
   position: relative;
@@ -22,9 +23,10 @@ body {
   position: fixed;
   top: 15px;
   right: 15px;
-  font-size: 14px;
+  font-size: 1rem;
   z-index: 9999;
   pointer-events:none;
+  color: #999999;
 }
 #words-container{
   position: relative;
