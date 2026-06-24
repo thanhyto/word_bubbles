@@ -73,6 +73,7 @@ textarea.addEventListener("input", (event) => {
         const swayAmount = Math.random() * 40 + 20;
         const swayOffset = Math.random() * 1000;
         const opacity = Math.random() * 0.4 + 0.3;
+        const fontWeight = 100 * 9 * Math.random() + 100; // Random font weight between 100 and 900
         // Word Bubble Object
         const wordBubble = {
             word: lastWord,
@@ -87,6 +88,7 @@ textarea.addEventListener("input", (event) => {
             swaySpeed: swaySpeed,
             swayAmount: swayAmount,
             swayOffset: swayOffset,
+            fontWeight: fontWeight,
         };
         // Store all words in an array for animation
         allWords.push(wordBubble);
@@ -107,6 +109,8 @@ function launchWord(wordBubble) {
     bubble.style.top = `${wordBubble.yPos}px`;
     bubble.style.opacity = wordBubble.opacity;
     bubble.style.fontFamily = "'Quicksand', sans-serif";
+    bubble.style.fontWeight = wordBubble.fontWeight;
+    bubble.style.pointerEvents = "none"; // Prevent interaction with the bubble
     wordBubble.bubble = bubble; // Store the bubble element in the wordBubble object
     // Update allWords with the new bubble
     document.getElementById("stage").appendChild(bubble);
