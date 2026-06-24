@@ -1,15 +1,15 @@
 let allWords = [];
 let lastLaunchedWord = "";
 let dots = [];
-const timeStamp = document.getElementById('timestamp');
+const timeStamp = document.getElementById("timestamp");
 const updateTimeStamp = () => {
-  const now = new Date();
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'short',
-    timeStyle: 'medium'
-  });
-  timeStamp.textContent = formatter.format(now);
-}
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        dateStyle: "short",
+        timeStyle: "medium",
+    });
+    timeStamp.textContent = formatter.format(now);
+};
 updateTimeStamp();
 setInterval(updateTimeStamp, 1000); // Update every second
 const textarea = document.getElementById("word-input");
@@ -45,7 +45,7 @@ const createDots = (x, y, color, opacity) => {
     div.style.borderRadius = `50%`;
     div.style.left = `${dot.x}px`;
     div.style.top = `${dot.y}px`;
-    div.style.opacity = `${dot.opacity}`;
+    div.style.opacity = dot.opacity;
     dot.div = div;
     dots.push(dot);
     document.getElementById("stage").appendChild(div);
@@ -132,7 +132,11 @@ function animate(timestamp) {
         allWords[i].yPos -= 30 * deltaTime; // going up - evaporate
         allWords[i].xPos =
             allWords[i].xPosOrigin +
-            Math.sin(elapsed / 1000 * allWords[i].swaySpeed + allWords[i].swayOffset) * allWords[i].swayAmount; // Add horizontal oscillation
+            Math.sin(
+                (elapsed / 1000) * allWords[i].swaySpeed +
+                    allWords[i].swayOffset,
+            ) *
+                allWords[i].swayAmount; // Add horizontal oscillation
         // If fade, then decrease size and opacity
         if (allWords[i].state == "Fade") {
             allWords[i].size -= 6 * deltaTime;
@@ -143,12 +147,17 @@ function animate(timestamp) {
             allWords[i].size += 6 * deltaTime;
             if (allWords[i].size >= 150 && !allWords[i].hasBurst) {
                 allWords[i].hasBurst = true;
-                burst(allWords[i].xPos, allWords[i].yPos, allWords[i].color, allWords[i].opacity);
+                burst(
+                    allWords[i].xPos,
+                    allWords[i].yPos,
+                    allWords[i].color,
+                    allWords[i].opacity,
+                );
                 allWords[i].opacity = 0;
             }
         }
         if (
-            allWords[i].yPos < -50 ||
+            allWords[i].yPos < 0 ||
             allWords[i].size < 0 ||
             allWords[i].size > 170 ||
             allWords[i].opacity <= 0
@@ -167,7 +176,6 @@ function animate(timestamp) {
             allWords[i].color = newColor; // Reset color
             allWords[i].bubble.style.color = newColor; // Update bubble color
             allWords[i].hasBurst = false;
-            
         }
         allWords[i].bubble.style.fontSize = `${allWords[i].size}px`;
         allWords[i].bubble.style.top = `${allWords[i].yPos}px`;
@@ -175,13 +183,24 @@ function animate(timestamp) {
         allWords[i].bubble.style.opacity = allWords[i].opacity;
     }
     for (let j = 0; j < dots.length; j++) {
-        if(dots[j].x < 0 || dots[j].x > window.innerWidth ||
-          dots[j].y < 0 || dots[j].y > window.innerHeight ||
-          dots[j].opacity <= 0
+        if (
+            dots[j].x < 0 ||
+            dots[j].x > window.innerWidth ||
+            dots[j].y < 0 ||
+            dots[j].y > window.innerHeight ||
+            dots[j].opacity <= 0
         ) {
-          dots.splice(j, 1);
-          j--;
-          continue;
+            console.log(
+                "removing dot",
+                j,
+                dots[j].x,
+                dots[j].y,
+                dots[j].opacity,
+            );
+            document.getElementById("stage").removeChild(dots[j].div);
+            dots.splice(j, 1);
+            j--;
+            continue;
         }
         dots[j].x += dots[j].vx * 60 * deltaTime;
         dots[j].y += dots[j].vy * 60 * deltaTime;
@@ -191,7 +210,7 @@ function animate(timestamp) {
         dots[j].div.style.top = `${dots[j].y}px`;
         dots[j].div.style.width = `${dots[j].size}px`;
         dots[j].div.style.height = `${dots[j].size}px`;
-        dots[j].div.style.opacity = `${dots[j].opacity}`;
+        dots[j].div.style.opacity = dots[j].opacity;
     }
     requestAnimationFrame(animate);
 }
