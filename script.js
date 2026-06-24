@@ -190,13 +190,6 @@ function animate(timestamp) {
             dots[j].y > window.innerHeight ||
             dots[j].opacity <= 0
         ) {
-            console.log(
-                "removing dot",
-                j,
-                dots[j].x,
-                dots[j].y,
-                dots[j].opacity,
-            );
             document.getElementById("stage").removeChild(dots[j].div);
             dots.splice(j, 1);
             j--;
